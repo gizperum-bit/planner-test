@@ -9,6 +9,12 @@ create table people (
   created_at timestamptz not null default now()
 );
 
+-- Además de la restricción exacta de arriba (que usa la tabla tasks para
+-- saber a quién está asignada cada tarea), agregamos una que ignora
+-- mayúsculas, para que "Ana" y "ana" no puedan quedar como dos personas
+-- distintas.
+create unique index people_name_ci_idx on people (lower(name));
+
 -- Tabla de tareas
 create table tasks (
   id uuid primary key default gen_random_uuid(),

@@ -19,6 +19,11 @@
   function initials(name) {
     return name.trim().split(/\s+/).slice(0, 2).map(w => w[0].toUpperCase()).join("");
   }
+  function escapeHtml(str) {
+    return String(str)
+      .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+  }
 
   function showError(err) {
     console.error(err);
@@ -119,7 +124,7 @@
     const { data, error } = await sb.from("people").select("name").order("name");
     let names = error ? [] : data.map(d => d.name);
     if (!names.includes(currentUser.name)) names.unshift(currentUser.name);
-    sel.innerHTML = names.map(n => `<option value="${n}">${n === currentUser.name ? n + " (tú)" : n}</option>`).join("");
+    sel.innerHTML = names.map(n => `<option value="${escapeHtml(n)}">${escapeHtml(n === currentUser.name ? n + " (tú)" : n)}</option>`).join("");
   }
 
   function renderKanbanColumns(idPrefix, tasks, showAssignee) {
@@ -172,10 +177,10 @@
     card.dataset.id = task.id;
 
     const note = (task.assigned_to === currentUser.name && task.created_by && task.created_by !== task.assigned_to)
-      ? `<div class="kcard-note">Te la asignó ${task.created_by}</div>` : "";
+      ? `<div class="kcard-note">Te la asignó ${escapeHtml(task.created_by)}</div>` : "";
 
     const assigneeHtml = opts.showAssignee
-      ? `<span class="kcard-assignee"><span class="avatar sm">${initials(task.assigned_to)}</span>${task.assigned_to}</span>` : "";
+      ? `<span class="kcard-assignee"><span class="avatar sm">${escapeHtml(initials(task.assigned_to))}</span>${escapeHtml(task.assigned_to)}</span>` : "";
 
     card.innerHTML = `
       <div class="kcard-top">
@@ -200,6 +205,7 @@
 
     card.querySelector(".del-btn").addEventListener("click", async e => {
       e.stopPropagation();
+      if (!confirm(`¿Eliminar la tarea "${task.title}"? Esto no se puede deshacer.`)) return;
       const { error } = await sb.from("tasks").delete().eq("id", task.id);
       if (error) { showError(error); return; }
       refreshActiveView();
@@ -299,6 +305,7 @@
 
   modalDeleteBtn.addEventListener("click", async () => {
     if (!editingTaskId) return;
+    if (!confirm("¿Eliminar esta tarea? Esto no se puede deshacer.")) return;
     const { error } = await sb.from("tasks").delete().eq("id", editingTaskId);
     if (error) { showError(error); return; }
     closeModal();
