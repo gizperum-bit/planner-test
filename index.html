@@ -1,0 +1,419 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Rumbo</title>
+<style>
+  :root {
+    --bg: #F5F8FC;
+    --surface: #FFFFFF;
+    --surface-alt: #EAF1F8;
+    --surface-hover: #E1EBF6;
+    --border: #DCE6F0;
+    --text: #16232E;
+    --text-muted: #5C7086;
+    --accent: #2E6FED;
+    --accent-strong: #1849B8;
+    --accent-soft: #DCEAFC;
+    --success: #1F9D6C;
+    --success-soft: #DEF3E8;
+    --warning: #C97A1E;
+    --warning-soft: #FBEBD8;
+    --danger: #C6493B;
+    --danger-soft: #FBE4E1;
+    --shadow: 0 1px 2px rgba(22, 35, 46, 0.06), 0 8px 24px rgba(22, 35, 46, 0.06);
+    --radius-s: 8px;
+    --radius-m: 14px;
+    --radius-l: 20px;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0F1720;
+      --surface: #16212C;
+      --surface-alt: #1C2A38;
+      --surface-hover: #223245;
+      --border: #2A3B4C;
+      --text: #E7EEF5;
+      --text-muted: #92A6B8;
+      --accent: #5B9BFF;
+      --accent-strong: #8AB9FF;
+      --accent-soft: #1E3350;
+      --success: #3FC087;
+      --success-soft: #16362A;
+      --warning: #E3A34D;
+      --warning-soft: #3A2C15;
+      --danger: #E37767;
+      --danger-soft: #3A1F1B;
+      --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px rgba(0,0,0,0.35);
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --bg: #0F1720;
+    --surface: #16212C;
+    --surface-alt: #1C2A38;
+    --surface-hover: #223245;
+    --border: #2A3B4C;
+    --text: #E7EEF5;
+    --text-muted: #92A6B8;
+    --accent: #5B9BFF;
+    --accent-strong: #8AB9FF;
+    --accent-soft: #1E3350;
+    --success: #3FC087;
+    --success-soft: #16362A;
+    --warning: #E3A34D;
+    --warning-soft: #3A2C15;
+    --danger: #E37767;
+    --danger-soft: #3A1F1B;
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px rgba(0,0,0,0.35);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    font-size: 15px;
+    line-height: 1.5;
+    min-height: 100vh;
+  }
+
+  h1, h2, h3 { text-wrap: balance; font-weight: 750; letter-spacing: -0.01em; margin: 0; }
+  button { font-family: inherit; cursor: pointer; }
+  input, select { font-family: inherit; }
+  ::selection { background: var(--accent-soft); }
+
+  /* ---------- Login screen ---------- */
+  .login-wrap { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px; }
+
+  .login-card {
+    width: 100%; max-width: 380px; background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius-l); box-shadow: var(--shadow); padding: 36px 32px 32px;
+  }
+
+  .brand { display: flex; align-items: center; gap: 10px; margin-bottom: 22px; }
+  .brand-mark {
+    width: 34px; height: 34px; border-radius: 10px;
+    background: linear-gradient(155deg, var(--accent), var(--accent-strong));
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .brand-mark svg { width: 18px; height: 18px; }
+  .brand-name { font-size: 19px; font-weight: 800; letter-spacing: -0.02em; }
+  .login-card h1 { font-size: 22px; margin-bottom: 6px; }
+  .login-card p.sub { color: var(--text-muted); font-size: 13.5px; margin: 0 0 24px; }
+
+  .field-label { display: block; font-size: 12.5px; font-weight: 600; color: var(--text-muted); margin-bottom: 6px; }
+
+  .text-input, select.text-input {
+    width: 100%; padding: 11px 13px; border-radius: var(--radius-s); border: 1px solid var(--border);
+    background: var(--bg); color: var(--text); font-size: 14.5px; outline: none;
+    transition: border-color .15s ease, box-shadow .15s ease;
+  }
+  .text-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+
+  .leader-toggle {
+    display: flex; align-items: flex-start; gap: 10px; margin: 18px 0 22px; padding: 12px 13px;
+    background: var(--surface-alt); border-radius: var(--radius-s); border: 1px solid var(--border);
+  }
+  .leader-toggle input { margin-top: 2px; width: 16px; height: 16px; accent-color: var(--accent); flex-shrink: 0; }
+  .leader-toggle .lt-text strong { display: block; font-size: 13.5px; font-weight: 650; }
+  .leader-toggle .lt-text span { font-size: 12.5px; color: var(--text-muted); }
+
+  .btn-primary {
+    width: 100%; background: var(--accent); color: white; border: none; padding: 12px;
+    border-radius: var(--radius-s); font-size: 14.5px; font-weight: 650; transition: background .15s ease;
+  }
+  .btn-primary:hover { background: var(--accent-strong); }
+  .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
+
+  .login-note { text-align: center; font-size: 12px; color: var(--text-muted); margin-top: 16px; }
+  .login-error { background: var(--danger-soft); color: var(--danger); font-size: 12.5px; padding: 9px 11px; border-radius: var(--radius-s); margin-bottom: 14px; display: none; }
+  .login-error.show { display: block; }
+
+  /* ---------- App shell ---------- */
+  .app { display: none; min-height: 100vh; flex-direction: column; }
+  .app.active { display: flex; }
+
+  .topbar {
+    display: flex; align-items: center; justify-content: space-between; padding: 14px 28px;
+    border-bottom: 1px solid var(--border); background: var(--surface); position: sticky; top: 0; z-index: 5;
+  }
+  .topbar-left { display: flex; align-items: center; gap: 26px; }
+  .tabs { display: flex; gap: 4px; background: var(--surface-alt); padding: 4px; border-radius: 10px; }
+  .tab-btn { border: none; background: transparent; padding: 7px 15px; border-radius: 7px; font-size: 13.5px; font-weight: 600; color: var(--text-muted); }
+  .tab-btn.active { background: var(--surface); color: var(--text); box-shadow: var(--shadow); }
+  .topbar-right { display: flex; align-items: center; gap: 14px; }
+  .user-chip { display: flex; align-items: center; gap: 8px; font-size: 13.5px; font-weight: 600; color: var(--text); }
+
+  .avatar {
+    width: 28px; height: 28px; border-radius: 50%; background: var(--accent-soft); color: var(--accent-strong);
+    display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 750; flex-shrink: 0;
+  }
+  .avatar.sm { width: 20px; height: 20px; font-size: 9.5px; }
+
+  .link-btn { background: none; border: none; color: var(--text-muted); font-size: 13px; font-weight: 600; padding: 6px 8px; border-radius: 6px; }
+  .link-btn:hover { color: var(--text); background: var(--surface-alt); }
+
+  .view { display: none; padding: 28px 28px 60px; max-width: 1180px; width: 100%; margin: 0 auto; }
+  .view.active { display: block; }
+
+  .view-header { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; flex-wrap: wrap; margin-bottom: 22px; }
+  .greeting { font-size: 22px; margin-bottom: 4px; }
+  .greeting-sub { color: var(--text-muted); font-size: 13.5px; margin: 0; }
+
+  .btn-add {
+    background: var(--accent); color: white; border: none; padding: 10px 18px; border-radius: var(--radius-s);
+    font-size: 13.5px; font-weight: 650; display: flex; align-items: center; gap: 6px; white-space: nowrap;
+  }
+  .btn-add:hover { background: var(--accent-strong); }
+  .btn-add svg { width: 14px; height: 14px; }
+
+  /* ---------- Kanban ---------- */
+  .kanban { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; align-items: start; }
+
+  .kcol { background: var(--surface-alt); border-radius: var(--radius-l); padding: 12px; min-height: 120px; transition: background .12s ease; }
+  .kcol.drag-over { background: var(--accent-soft); }
+
+  .kcol-head { display: flex; align-items: center; gap: 8px; padding: 6px 6px 12px; }
+  .kcol-dot { width: 8px; height: 8px; border-radius: 50%; }
+  .kcol-title { font-size: 12.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); }
+  .kcol-count { margin-left: auto; font-size: 11.5px; color: var(--text-muted); background: var(--surface); padding: 1px 8px; border-radius: 100px; font-variant-numeric: tabular-nums; }
+
+  .kcol-body { display: flex; flex-direction: column; gap: 8px; min-height: 44px; }
+
+  .kcard {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-m);
+    padding: 12px 13px; cursor: pointer; box-shadow: var(--shadow);
+  }
+  .kcard.dragging { opacity: 0.4; }
+
+  .kcard-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; margin-bottom: 8px; }
+  .prio-chip { font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; padding: 2px 8px; border-radius: 100px; white-space: nowrap; }
+  .prio-alta { background: var(--danger-soft); color: var(--danger); }
+  .prio-media { background: var(--warning-soft); color: var(--warning); }
+  .prio-baja { background: var(--surface-alt); color: var(--text-muted); }
+
+  .kcard-actions { display: flex; gap: 2px; opacity: 0; transition: opacity .12s ease; flex-shrink: 0; }
+  .kcard:hover .kcard-actions { opacity: 1; }
+  .kicon-btn { background: none; border: none; color: var(--text-muted); padding: 3px; border-radius: 5px; display: flex; }
+  .kicon-btn svg { width: 13px; height: 13px; }
+  .kicon-btn:hover { color: var(--accent); background: var(--surface-alt); }
+  .kicon-btn.danger:hover { color: var(--danger); }
+
+  .kcard-title { font-size: 13.5px; font-weight: 650; margin-bottom: 9px; line-height: 1.35; }
+
+  .kcard-meta { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .kcard-dates { font-size: 11px; color: var(--text-muted); font-variant-numeric: tabular-nums; }
+  .kcard-assignee { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--text-muted); white-space: nowrap; }
+  .kcard-note { font-size: 11px; color: var(--text-muted); font-style: italic; margin-top: 6px; }
+
+  .kcard-move {
+    margin-top: 10px; width: 100%; font-size: 11.5px; font-weight: 600; color: var(--text);
+    background: var(--surface-alt); border: 1px solid var(--border); border-radius: 7px;
+    padding: 6px 8px; outline: none;
+  }
+  .kcard-move:focus { border-color: var(--accent); }
+
+  .kcol-empty { font-size: 12px; color: var(--text-muted); text-align: center; padding: 18px 6px; }
+
+  /* ---------- Modal ---------- */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0; background: rgba(16, 24, 32, 0.45);
+    align-items: center; justify-content: center; z-index: 50; padding: 20px;
+  }
+  .modal-overlay.active { display: flex; }
+  .modal-card {
+    background: var(--surface); border-radius: var(--radius-l); border: 1px solid var(--border);
+    box-shadow: var(--shadow); width: 100%; max-width: 440px; padding: 26px 26px 22px; max-height: 90vh; overflow-y: auto;
+  }
+  .modal-card h3 { font-size: 17px; margin-bottom: 18px; }
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+  .form-grid .full { grid-column: 1 / -1; }
+  .modal-actions { display: flex; justify-content: space-between; align-items: center; margin-top: 20px; gap: 10px; }
+  .btn-secondary { background: var(--surface-alt); color: var(--text); border: none; padding: 10px 16px; border-radius: var(--radius-s); font-size: 13.5px; font-weight: 650; }
+  .btn-secondary:hover { background: var(--surface-hover); }
+  .btn-delete-text { background: none; border: none; color: var(--danger); font-size: 13px; font-weight: 600; padding: 8px 4px; }
+  .btn-delete-text:hover { text-decoration: underline; }
+  .modal-right { display: flex; gap: 10px; margin-left: auto; }
+
+  /* ---------- Tablero del equipo ---------- */
+  .board-summary { display: flex; gap: 26px; flex-wrap: wrap; }
+  .summary-num { font-size: 22px; font-weight: 800; font-variant-numeric: tabular-nums; }
+  .summary-label { font-size: 11.5px; color: var(--text-muted); }
+
+  /* ---------- Toast de error ---------- */
+  .toast {
+    position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%) translateY(20px);
+    background: var(--danger); color: white; padding: 11px 18px; border-radius: var(--radius-s);
+    font-size: 13.5px; font-weight: 600; box-shadow: var(--shadow); opacity: 0; pointer-events: none;
+    transition: opacity .2s ease, transform .2s ease; z-index: 100; max-width: 90vw; text-align: center;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  @media (max-width: 860px) {
+    .kanban { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 640px) {
+    .topbar { padding: 12px 16px; }
+    .topbar-left { gap: 14px; }
+    .view { padding: 20px 16px 50px; }
+    .form-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="login-wrap" id="loginWrap">
+  <div class="login-card">
+    <div class="brand">
+      <div class="brand-mark"><svg viewBox="0 0 24 24" fill="none"><path d="M4 12L10 18L20 6" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="brand-name">Rumbo</div>
+    </div>
+    <h1>Entra a tu espacio</h1>
+    <p class="sub">Escribe tu nombre para ver tu tablero. No necesitas contraseña.</p>
+    <div class="login-error" id="loginError"></div>
+    <label class="field-label" for="nameInput">Tu nombre</label>
+    <input class="text-input" id="nameInput" type="text" placeholder="Ej. Camila Vera" autocomplete="off" />
+    <div class="leader-toggle">
+      <input type="checkbox" id="leaderCheck" />
+      <div class="lt-text">
+        <strong>Entro como líder del equipo</strong>
+        <span>Además de tu tablero, vas a ver el avance de todas las personas. Solo aplica la primera vez que entras con este nombre.</span>
+      </div>
+    </div>
+    <button class="btn-primary" id="enterBtn">Entrar</button>
+    <p class="login-note">Tus datos se guardan en una base de datos compartida con tu equipo.</p>
+  </div>
+</div>
+
+<div class="app" id="app">
+  <div class="topbar">
+    <div class="topbar-left">
+      <div class="brand">
+        <div class="brand-mark" style="width:26px;height:26px;border-radius:8px;"><svg viewBox="0 0 24 24" fill="none" style="width:14px;height:14px;"><path d="M4 12L10 18L20 6" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="brand-name" style="font-size:16px;">Rumbo</div>
+      </div>
+      <div class="tabs" id="tabs">
+        <button class="tab-btn active" data-view="mine">Mi tablero</button>
+        <button class="tab-btn" data-view="board" id="boardTabBtn" style="display:none;">Tablero del equipo</button>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <div class="user-chip"><span class="avatar" id="userAvatar">?</span><span id="userNameLabel"></span></div>
+      <button class="link-btn" id="logoutBtn">Salir</button>
+    </div>
+  </div>
+
+  <div class="view active" id="view-mine">
+    <div class="view-header">
+      <div>
+        <h2 class="greeting" id="greetingText">Hola</h2>
+        <p class="greeting-sub">Tus tareas, ordenadas por prioridad dentro de cada columna. Arrastra una tarjeta para cambiarla de estado.</p>
+      </div>
+      <button class="btn-add" id="openAddBtn"><svg viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="white" stroke-width="2.3" stroke-linecap="round"/></svg>Nueva tarea</button>
+    </div>
+
+    <div class="kanban">
+      <div class="kcol" data-status="todo">
+        <div class="kcol-head"><span class="kcol-dot" style="background:var(--text-muted);"></span><span class="kcol-title">Por hacer</span><span class="kcol-count" id="count-todo">0</span></div>
+        <div class="kcol-body" id="col-todo"></div>
+      </div>
+      <div class="kcol" data-status="in_progress">
+        <div class="kcol-head"><span class="kcol-dot" style="background:var(--accent);"></span><span class="kcol-title">En progreso</span><span class="kcol-count" id="count-in_progress">0</span></div>
+        <div class="kcol-body" id="col-in_progress"></div>
+      </div>
+      <div class="kcol" data-status="done">
+        <div class="kcol-head"><span class="kcol-dot" style="background:var(--success);"></span><span class="kcol-title">Hecho</span><span class="kcol-count" id="count-done">0</span></div>
+        <div class="kcol-body" id="col-done"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="view" id="view-board">
+    <div class="view-header">
+      <div>
+        <h2>Tablero del equipo</h2>
+        <p class="greeting-sub">Avance de todas las personas, de un vistazo.</p>
+      </div>
+      <div class="board-summary">
+        <div><div class="summary-num" id="teamDone">0%</div><div class="summary-label">Tareas hechas</div></div>
+        <div><div class="summary-num" id="teamMembers">0</div><div class="summary-label">Personas activas</div></div>
+        <div><div class="summary-num" id="teamOpen">0</div><div class="summary-label">Tareas abiertas</div></div>
+        <div><div class="summary-num" id="teamUrgent">0</div><div class="summary-label">Prioridad alta abierta</div></div>
+      </div>
+    </div>
+    <div class="kanban">
+      <div class="kcol" data-status="todo">
+        <div class="kcol-head"><span class="kcol-dot" style="background:var(--text-muted);"></span><span class="kcol-title">Por hacer</span><span class="kcol-count" id="teamcount-todo">0</span></div>
+        <div class="kcol-body" id="teamcol-todo"></div>
+      </div>
+      <div class="kcol" data-status="in_progress">
+        <div class="kcol-head"><span class="kcol-dot" style="background:var(--accent);"></span><span class="kcol-title">En progreso</span><span class="kcol-count" id="teamcount-in_progress">0</span></div>
+        <div class="kcol-body" id="teamcol-in_progress"></div>
+      </div>
+      <div class="kcol" data-status="done">
+        <div class="kcol-head"><span class="kcol-dot" style="background:var(--success);"></span><span class="kcol-title">Hecho</span><span class="kcol-count" id="teamcount-done">0</span></div>
+        <div class="kcol-body" id="teamcol-done"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal-card">
+    <h3 id="modalTitle">Nueva tarea</h3>
+    <input type="hidden" id="taskId" />
+    <label class="field-label" for="fTitle">Nombre de la tarea</label>
+    <input class="text-input" id="fTitle" type="text" placeholder="Ej. Enviar propuesta al cliente" style="margin-bottom:14px;" />
+
+    <div class="form-grid">
+      <div>
+        <label class="field-label" for="fAssignee">Asignado a</label>
+        <select class="text-input" id="fAssignee"></select>
+      </div>
+      <div>
+        <label class="field-label" for="fPriority">Prioridad</label>
+        <select class="text-input" id="fPriority">
+          <option value="alta">Alta</option>
+          <option value="media" selected>Media</option>
+          <option value="baja">Baja</option>
+        </select>
+      </div>
+      <div>
+        <label class="field-label" for="fStart">Fecha de inicio</label>
+        <input class="text-input" id="fStart" type="date" />
+      </div>
+      <div>
+        <label class="field-label" for="fEnd">Fecha de fin</label>
+        <input class="text-input" id="fEnd" type="date" />
+      </div>
+      <div class="full">
+        <label class="field-label" for="fStatus">Estado</label>
+        <select class="text-input" id="fStatus">
+          <option value="todo">Por hacer</option>
+          <option value="in_progress">En progreso</option>
+          <option value="done">Hecho</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn-delete-text" id="modalDeleteBtn" style="display:none;">Eliminar tarea</button>
+      <div class="modal-right">
+        <button class="btn-secondary" id="modalCancelBtn">Cancelar</button>
+        <button class="btn-add" id="modalSaveBtn" style="padding:10px 18px;">Guardar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="app.js"></script>
+</body>
+</html>
